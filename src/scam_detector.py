@@ -10,7 +10,7 @@ from sklearn.metrics import mean_absolute_error
 
 
 # Imported, changed column names, and changed labels to 1s and 0s
-df = pd.read_csv("data\spam.csv", encoding='latin-1')[['v1', 'v2']]
+df = pd.read_csv("email-scam-detector\data\spam.csv", encoding='latin-1')[['v1', 'v2']]
 df.columns = ['label', 'text']
 df['label'] = df['label'].map({'ham' : 0, 'spam' : 1})
 
@@ -36,5 +36,3 @@ def classify_email(text):
     vec = vectorizer.transform([text])
     prediction = model.predict(vec)[0]
     return "Scam" if prediction == 1 else "Safe"
-
-print(classify_email("Congratulations! You've won a free cruise. Click here to claim."))
