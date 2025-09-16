@@ -5,13 +5,14 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_absolute_error
 
 
 # Imported, changed column names, and changed labels to 1s and 0s
 df = pd.read_csv("email-scam-detector\data\spam.csv", encoding='latin-1')[['v1', 'v2']]
-df.columns = ['label', 'text']
+df.columns = ['label', 'text'] # "spam_ham_dataset.csv" already has columns labeled correctly
 df['label'] = df['label'].map({'ham' : 0, 'spam' : 1})
 
 
@@ -23,7 +24,7 @@ y = df['label']
 
 # Training the model
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
-model = MultinomialNB()
+model = RandomForestClassifier(n_estimators=100, random_state=1)
 model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
