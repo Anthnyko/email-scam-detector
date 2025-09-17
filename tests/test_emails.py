@@ -1,4 +1,4 @@
-from scam_detector import classify_email
+from src.predict import classify_email
 
 emails = ["Hi Anthony, just confirming our meeting tomorrow at 10am. Let me know if you need the Zoom link again."
 , "Your account has been compromised. Click here immediately to verify your identity and avoid suspension."

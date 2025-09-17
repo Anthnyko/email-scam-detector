@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, mean_absolute_error
 import pickle
-from src.preprocess import get_vectorizer
+from preprocess import get_vectorizer
 
 # Load and clean data
 df = pd.read_csv("data/raw/spam.csv", encoding='latin-1')[['v1', 'v2']]
