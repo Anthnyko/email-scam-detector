@@ -7,9 +7,10 @@ class EmailRequest(BaseModel):
 class PredictionResponse(BaseModel):
     prediction: str
     confidence: float
+    flagged_keywords: list[str]   # Shows list of scam phrases in response
 
 class BatchRequest(BaseModel): # Accepts a list of email texts
-    texts: List[str]
+    texts: list[str]
 
 class BatchResponse(BaseModel):
-    results: List[PredictionResponse] # Returns a list of predictions
+    results: list[PredictionResponse] # Returns a list of predictions

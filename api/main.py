@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from api.schemas import EmailRequest, PredictionResponse, BatchRequest, BatchResponse
 from src.predict import classify_email
+from src.flagger import flag_keywords
 import logging
 logging.basicConfig(
     level=logging.INFO,               # Set log level to INFO
@@ -23,13 +24,15 @@ def read_root():
 def predict(request: EmailRequest):                    # Accepts email texts
     logger.info(f"Received email text: {request.text}")
     label, confidence = classify_email(request.text)   # Runs prediction with function
-    logger.info(f"Prediction: {label}, Confidence: {confidence}")
-    return PredictionResponse(prediction=label, confidence=confidence)  # Returns structured response
+    keywords = flag_keywords(request.text)   # Check input email for scam phrases
+    logger.info(f"Prediction: {label}, Confidence: {confidence}, Keywords: {keywords}")
+    return PredictionResponse(prediction=label, confidence=confidence, flagged_keywords=keywords)  # Returns structured response
 
 @app.post("/batch_predict", response_model=BatchResponse)
 def batch_predict(request: BatchRequest):
     results = []
     for text in request.texts:       # Loops through each email requested
         label, confidence = classify_email(text)
-        results.append(PredictionResponse(prediction=label, confidence=confidence))   # Adds prediction and scoring into list
+        keywords = flag_keywords(text) 
+        results.append(PredictionResponse(prediction=label, confidence=confidence, flagged_keywords=keywords))   # Adds prediction and scoring into list
     return BatchResponse(results=results)   # Returns a structured list of results
