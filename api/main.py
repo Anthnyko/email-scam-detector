@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.schemas import EmailRequest, PredictionResponse
+from api.schemas import EmailRequest, PredictionResponse, BatchRequest, BatchResponse
 from src.predict import classify_email
 import logging
 logging.basicConfig(
@@ -25,3 +25,11 @@ def predict(request: EmailRequest):                    # Accepts email texts
     label, confidence = classify_email(request.text)   # Runs prediction with function
     logger.info(f"Prediction: {label}, Confidence: {confidence}")
     return PredictionResponse(prediction=label, confidence=confidence)  # Returns structured response
+
+@app.post("/batch_predict", response_model=BatchResponse)
+def batch_predict(request: BatchRequest):
+    results = []
+    for text in request.texts:       # Loops through each email requested
+        label, confidence = classify_email(text)
+        results.append(PredictionResponse(prediction=label, confidence=confidence))   # Adds prediction and scoring into list
+    return BatchResponse(results=results)   # Returns a structured list of results
